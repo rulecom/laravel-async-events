@@ -1,9 +1,9 @@
 <?php
-namespace App\AsyncTransaction\EventHandlers;
+namespace Rule\AsyncEvents\AsyncTransaction\EventHandlers;
 
 use Rule\AsyncEvents\AsyncEvent\AsyncEvent;
 use Rule\AsyncEvents\Dispatcher\EventHandler;
-use App\AsyncTransaction\Transaction;
+use Rule\AsyncEvents\AsyncTransaction\Transaction;
 
 class TransactionEventHandler implements EventHandler
 {

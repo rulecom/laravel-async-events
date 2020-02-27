@@ -1,5 +1,5 @@
 <?php
-namespace App\AsyncTransaction\Events;
+namespace Rule\AsyncEvents\AsyncTransaction\Events;
 
 
 class CommitTransactionEvent extends TransactionEvent

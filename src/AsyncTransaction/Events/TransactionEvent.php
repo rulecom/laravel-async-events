@@ -1,5 +1,5 @@
 <?php
-namespace App\AsyncTransaction\Events;
+namespace Rule\AsyncEvents\AsyncTransaction\Events;
 
 
 use Rule\AsyncEvents\AsyncEvent\BaseAsyncEvent;

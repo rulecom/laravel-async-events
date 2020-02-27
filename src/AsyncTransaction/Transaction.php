@@ -1,21 +1,18 @@
 <?php
-namespace App\AsyncTransaction;
+namespace Rule\AsyncEvents\AsyncTransaction;
 
 use Rule\AsyncEvents\AsyncEvent\AsyncEvent;
 use Rule\AsyncEvents\AsyncEvent\BaseAsyncEvent;
-use Rule\AsyncEvents\Dispatcher\BaseEventDispatcher;
 use Rule\AsyncEvents\Dispatcher\Dispatcher;
 use Rule\AsyncEvents\Dispatcher\EventHandler;
 use Rule\AsyncEvents\Emitter\Emitter;
-use Rule\AsyncEvents\Emitter\RedisEmitter;
 use Rule\AsyncEvents\Listener\Listener;
-use Rule\AsyncEvents\Listener\RedisListener;
-use App\AsyncTransaction\EventHandlers\TransactionEventHandler;
-use App\AsyncTransaction\Events\CommitTransactionEvent;
-use App\AsyncTransaction\Events\InitTransactionEvent;
-use App\AsyncTransaction\Events\RollbackTransactionEvent;
-use App\EventWorker\EventWorker;
-use App\EventWorker\Worker;
+use Rule\AsyncEvents\AsyncTransaction\EventHandlers\TransactionEventHandler;
+use Rule\AsyncEvents\AsyncTransaction\Events\CommitTransactionEvent;
+use Rule\AsyncEvents\AsyncTransaction\Events\InitTransactionEvent;
+use Rule\AsyncEvents\AsyncTransaction\Events\RollbackTransactionEvent;
+use Rule\AsyncEvents\EventWorker\EventWorker;
+use Rule\AsyncEvents\EventWorker\Worker;
 use Illuminate\Support\Collection;
 
 class Transaction implements AsyncTransaction

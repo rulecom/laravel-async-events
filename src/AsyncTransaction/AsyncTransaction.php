@@ -1,8 +1,7 @@
 <?php
-namespace App\AsyncTransaction;
+namespace Rule\AsyncEvents\AsyncTransaction;
 
 use Rule\AsyncEvents\Dispatcher\Dispatcher;
-use Rule\AsyncEvents\Dispatcher\EventHandler;
 use Rule\AsyncEvents\Emitter\Emitter;
 use Rule\AsyncEvents\Listener\Listener;
 use Illuminate\Support\Collection;
