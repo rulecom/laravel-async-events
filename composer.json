@@ -1,7 +1,7 @@
 {
     "name": "rulecom/laravel-async-events",
     "description": "Basic eventing system built on laravel and redis",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "type": "library",
     "require": {
         "php": ">=7.1",
