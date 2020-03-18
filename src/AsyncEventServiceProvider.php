@@ -11,12 +11,17 @@ use Rule\AsyncEvents\Listener\RedisListener;
 use Rule\AsyncEvents\Router\EventRouter;
 use Rule\AsyncEvents\Router\Router;
 use Illuminate\Support\ServiceProvider;
+use Rule\AsyncEvents\EventWorker\Commands\EventWorkerDaemon;
 
 class AsyncEventServiceProvider extends ServiceProvider
 {
     public function register()
     {
         // global stuff
+        $this->commands([
+            EventWorkerDaemon::class
+        ]);
+
         $this->app->singleton(Dispatcher::class, BaseEventDispatcher::class);
         $this->app->singleton(Router::class, EventRouter::class);
         $this->app->singleton(Emitter::class, RedisEmitter::class);
