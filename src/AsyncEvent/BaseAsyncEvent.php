@@ -11,11 +11,10 @@ class BaseAsyncEvent implements AsyncEvent
     protected $channel;
     protected $callbackChannel;
 
-    public function __construct(string $name, array $payload, string $channel = '', string $callbackChannel = '')
+    public function __construct(string $name, array $payload, string $callbackChannel = '')
     {
         $this->eventName = $name;
         $this->payload = $payload;
-        $this->channel = $channel;
         $this->callbackChannel = $callbackChannel;
     }
 
