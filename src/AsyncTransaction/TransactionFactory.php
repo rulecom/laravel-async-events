@@ -6,6 +6,8 @@ use Rule\AsyncEvents\Dispatcher\BaseEventDispatcher;
 use Rule\AsyncEvents\Emitter\Emitter;
 use Rule\AsyncEvents\Listener\RedisListener;
 use Illuminate\Support\Collection;
+use Rule\AsyncEvents\Dispatcher\LocalDispatcher;
+use Rule\AsyncEvents\Listener\LocalListener;
 
 class TransactionFactory
 {
@@ -25,8 +27,8 @@ class TransactionFactory
         int $timeout = 5,
         int $pollInterval = 100
     ) {
-        $dispatcher = new BaseEventDispatcher();
-        $listener = new RedisListener($dispatcher);
+        $dispatcher = app(LocalDispatcher::class);
+        $listener = app(LocalListener::class);
 
         $transaction = new Transaction(
             $this->emitter,
@@ -41,7 +43,7 @@ class TransactionFactory
             $transaction->setCommitCallback($commitCallback);
         }
 
-        IF ($rollbackCallback) {
+        if ($rollbackCallback) {
             $transaction->setRollbackCallback($rollbackCallback);
         }
 

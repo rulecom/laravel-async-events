@@ -11,8 +11,7 @@ class BaseEventDispatcher implements Dispatcher
     public function dispatch(AsyncEvent $event)
     {
         $handlers = $this->handlerMap[$event->getName()] ?? [];
-        /*var_dump($event);
-        var_dump($handlers);*/
+
         array_walk($handlers, function (EventHandler $handler) use ($event) {
             $handler->handle($event);
         });
