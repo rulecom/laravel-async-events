@@ -1,7 +1,6 @@
 <?php
 namespace Rule\AsyncEvents\Channel;
 
-use Rule\AsyncEvents\AsyncEvent\BaseAsyncEvent;
 use Rule\AsyncEvents\Serializer\BaseSerializer;
 use Illuminate\Support\Facades\Redis;
 use Rule\AsyncEvents\AsyncEvent\AsyncEvent;
@@ -73,31 +72,16 @@ class RedisChannel implements Channel
         return sprintf('%s:%s', static::KEEP_ALIVE_KEY_PREFIX, $this->getName());
     }
 
-    private function initChannel(string $channelName)
-    {
-        if (!$this->redis->exists($channelName)) {
-            // super hacky shit to make channel alive as Redis deletes keys with empty lists :(
-            // also thats why its stack, not queue - ie LIFO
-            // TODO: make some kind or reserve keys to manage appropriate keys for push and pop
-            //$this->push(new BaseAsyncEvent('keep_alive', []));
-        }
-    }
-
     private function registerSystemHandlers()
     {
         register_shutdown_function(function () {
             $this->clearChannel();
         });
-
-        /*if (function_exists('pcntl_signal')) {
-            pcntl_signal(SIGINT, function () {
-                $this->clearChannel();
-            });
-        }*/
     }
 
     private function clearChannel()
     {
+        $this->redis->expire($this->getKeepAliveKey(), 0);
         $this->redis->del($this->getName());
     }
 

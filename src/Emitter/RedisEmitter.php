@@ -25,9 +25,7 @@ class RedisEmitter implements Emitter
     public function emit(AsyncEvent $event)
     {
         $targetChannels = $this->findAllTargetChannels($event);
-        //var_dump($event);
-        //var_dump($targetChannels);
-        // TODO: make channel discovery and save those in event => channel map
+
         array_walk($targetChannels, function (string $channelName) use ($event) {
             $channel = new RedisChannel($channelName, false);
             $channel->push($event);

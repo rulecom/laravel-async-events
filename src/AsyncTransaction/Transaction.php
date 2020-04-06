@@ -65,9 +65,6 @@ class Transaction implements AsyncTransaction
      */
     private $listenerInterval;
 
-    private $commited = false;
-    private $rollback = false;
-
     public function __construct(
         Emitter $emitter,
         Dispatcher $dispatcher,
