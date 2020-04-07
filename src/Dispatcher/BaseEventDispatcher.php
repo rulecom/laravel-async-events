@@ -4,7 +4,7 @@ namespace Rule\AsyncEvents\Dispatcher;
 
 use Rule\AsyncEvents\AsyncEvent\AsyncEvent;
 
-class BaseEventDispatcher implements Dispatcher
+class BaseEventDispatcher implements Dispatcher, LocalDispatcher
 {
     private $handlerMap;
 

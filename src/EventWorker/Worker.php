@@ -38,6 +38,7 @@ class Worker implements EventWorker
     public function run()
     {
         $this->startAt = time();
+        $this->shouldStop = false;
 
         while (!$this->shouldStop) {
             $eventsCount = 0;
@@ -73,6 +74,4 @@ class Worker implements EventWorker
     {
         $this->shouldStop = true;
     }
-
-
 }

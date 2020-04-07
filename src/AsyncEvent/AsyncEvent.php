@@ -23,15 +23,11 @@ interface AsyncEvent
     public function setPayload(array $payload);
 
     /**
-     * Force routing on manager.
-     * @return string
-     */
-    public function getChannel(): string;
-
-    /**
      * Request - Response queue. Consumer should emit and/or double produced events
      * by appropriate routing
      * @return string
      */
     public function getCallbackChannel(): string;
+
+    public function setCallbackChannel(string $channel);
 }

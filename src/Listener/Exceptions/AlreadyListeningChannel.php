@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Rule\AsyncEvents\Listener\Exceptions;
 
 

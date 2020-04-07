@@ -12,6 +12,10 @@ use Rule\AsyncEvents\Router\EventRouter;
 use Rule\AsyncEvents\Router\Router;
 use Illuminate\Support\ServiceProvider;
 use Rule\AsyncEvents\Dispatcher\LocalDispatcher;
+use Rule\AsyncEvents\EventPromise\AsyncEventPromise;
+use Rule\AsyncEvents\EventPromise\EventPromise;
+use Rule\AsyncEvents\EventScope\AsyncEventScope;
+use Rule\AsyncEvents\EventScope\EventScope;
 use Rule\AsyncEvents\EventWorker\Commands\EventWorkerDaemon;
 use Rule\AsyncEvents\Listener\LocalListener;
 
@@ -31,5 +35,8 @@ class AsyncEventServiceProvider extends ServiceProvider
 
         $this->app->bind(LocalDispatcher::class, BaseEventDispatcher::class);
         $this->app->bind(LocalListener::class, RedisListener::class);
+
+        $this->app->bind(EventScope::class, AsyncEventScope::class);
+        $this->app->bind(EventPromise::class, AsyncEventPromise::class);
     }
 }

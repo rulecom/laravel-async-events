@@ -1,8 +1,5 @@
 <?php
-
-
 namespace Rule\AsyncEvents\Listener;
-
 
 use Rule\AsyncEvents\AsyncEvent\AsyncEvent;
 use Rule\AsyncEvents\AsyncEvent\EventUtilTrait;
@@ -12,7 +9,7 @@ use Rule\AsyncEvents\Listener\Exceptions\AlreadyListeningChannel;
 use Rule\AsyncEvents\Listener\Exceptions\NoDispatcherRegistered;
 use Illuminate\Support\Facades\Redis;
 
-class RedisListener implements Listener
+class RedisListener implements Listener, LocalListener
 {
     use EventUtilTrait;
 

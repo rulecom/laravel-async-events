@@ -8,7 +8,6 @@ class BaseAsyncEvent implements AsyncEvent
 {
     protected $eventName;
     protected $payload;
-    protected $channel;
     protected $callbackChannel;
 
     public function __construct(string $name, array $payload, string $callbackChannel = '')
@@ -33,13 +32,13 @@ class BaseAsyncEvent implements AsyncEvent
         $this->payload = $payload;
     }
 
-    public function getChannel(): string
-    {
-        return $this->channel;
-    }
-
     public function getCallbackChannel(): string
     {
         return $this->callbackChannel;
+    }
+
+    public function setCallbackChannel(string $channel)
+    {
+        $this->callbackChannel = $channel;
     }
 }

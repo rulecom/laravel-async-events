@@ -1,10 +1,6 @@
 <?php
-
-
 namespace Rule\AsyncEvents\Listener;
 
-
-use Rule\AsyncEvents\Channel\Channel;
 use Rule\AsyncEvents\Dispatcher\Dispatcher;
 
 interface Listener

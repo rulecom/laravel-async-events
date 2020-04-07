@@ -2,13 +2,13 @@
 namespace Rule\AsyncEvents\EventScope;
 
 use Rule\AsyncEvents\Dispatcher\Dispatcher;
+use Rule\AsyncEvents\EventScope\Exceptions\ScopeExecutionTimeout;
 use Rule\AsyncEvents\EventWorker\Worker;
 use Rule\AsyncEvents\Listener\Listener;
 
-class AsyncCallbackScope implements EventScope
+class AsyncEventScope implements EventScope
 {
     private $id;
-    private $handlersMap;
 
     private $dispatcher;
     private $listener;
@@ -16,6 +16,8 @@ class AsyncCallbackScope implements EventScope
 
     private $workerTtl;
     private $workerPoll;
+
+    private $status;
     private $beforeCallback;
     private $afterCallback;
 
@@ -25,7 +27,7 @@ class AsyncCallbackScope implements EventScope
         $this->listener = $listener;
         $this->worker = $worker;
 
-        $this->id = uniqid(rand());
+        $this->status = EventScope::STATUS_INIT;
     }
 
     public function getScopeId(): string
@@ -45,19 +47,31 @@ class AsyncCallbackScope implements EventScope
 
     public function run()
     {
-        call_user_func($this->beforeCallback, $this);
-        $this->setUpHandlers();
-        $this->listener->setEventDispatcher($this->dispatcher);
-        $this->listener->run(); // for init channels
+        $this->init();
 
-        $this->worker->setTTL($this->workerTtl);
-        $this->worker->setPollFrequency($this->workerPoll);
+        if ($this->beforeCallback) {
+            call_user_func($this->beforeCallback, $this);
+        }
+
+
+        $this->listener->run();
+        $this->status = EventScope::STATUS_RUNNING;
         $this->worker->run();
-        call_user_func($this->afterCallback, $this);
+
+        if ($this->status != EventScope::STATUS_FINISHED) {
+            $this->status = EventScope::STATUS_TIMEOUT;
+
+            throw new ScopeExecutionTimeout('Scope wasn\'t finished before timeout exceeded');
+        }
+
+        if ($this->afterCallback) {
+            call_user_func($this->afterCallback, $this);
+        }
     }
 
     public function stop()
     {
+        $this->status = EventScope::STATUS_FINISHED;
         $this->worker->stop();
     }
 
@@ -71,20 +85,44 @@ class AsyncCallbackScope implements EventScope
         $this->workerPoll = $ms;
     }
 
-    private function wrapHandler(callable $handler): ScopeEventHandler
+    public function addEventHandler(string $eventName, ScopeEventHandler $handler)
+    {
+        $handler->setScope($this);
+
+        $this->dispatcher->registerHandler($eventName, $handler);
+    }
+
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    private function setScopeId()
+    {
+        $this->id = uniqid(rand());
+    }
+
+    private function init()
+    {
+        $this->setScopeId();
+
+        $this->listener->setEventDispatcher($this->dispatcher);
+        $this->listener->listenChannel($this->getScopeId());
+
+        $this->worker->setListener($this->listener);
+        $this->worker->setTTL($this->workerTtl);
+        $this->worker->setPollFrequency($this->workerPoll);
+    }
+
+    private function wrapCallback(callable $handler): ScopeEventHandler
     {
         return new CallbackScopeEventHandler($handler);
     }
 
-    private function setUpHandlers()
+    public function addEventCallback(string $eventName, callable $callback)
     {
-        foreach ($this->handlersMap as $event => $handler) {
-            if (is_callable($handler)) {
-                $handler = $this->wrapHandler($handler);
-            }
+        $handler = $this->wrapCallback($callback);
 
-            $handler->setScope($this);
-            $this->dispatcher->registerHandler($event, $handler);
-        }
+        $this->addEventHandler($eventName, $handler);
     }
 }
