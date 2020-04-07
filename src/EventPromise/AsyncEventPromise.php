@@ -34,14 +34,14 @@ class AsyncEventPromise implements EventPromise
         $this->scope->run();
     }
 
-    public function promise(AsyncEvent $event): self
+    public function promise(AsyncEvent $event): EventPromise
     {
         $this->initEvent = $event;
 
         return $this;
     }
 
-    public function resolve(callable $callback, ?string $event): self
+    public function resolve(callable $callback, ?string $event): EventPromise
     {
         $this->resolveCallback = function (AsyncEvent $event, EventScope $scope) use ($callback) {
             $scope->stop();
@@ -55,7 +55,7 @@ class AsyncEventPromise implements EventPromise
         return $this;
     }
 
-    public function reject(callable $callback, ?string $event): self
+    public function reject(callable $callback, ?string $event): EventPromise
     {
         $this->rejectCallback = function (AsyncEvent $event, EventScope $scope) use ($callback) {
             $scope->stop();
