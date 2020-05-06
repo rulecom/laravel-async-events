@@ -25,12 +25,22 @@ class AsyncEventPromise implements EventPromise
         $this->emitter = $emitter;
     }
 
-    public function wait(int $timeout = 0)
+    public function wait(int $timeout = 0, int $pollFrequency = 0)
     {
         $this->init();
 
-        $this->scope->setWorkerPoll(self::DEFAULT_WORKER_POLL);
-        $this->scope->setWorkerTtl( self::DEFAULT_WORKER_TIMEOUT);
+        if ($timeout > 0) {
+            $this->scope->setWorkerTtl($timeout);
+        } else {
+            $this->scope->setWorkerTtl(self::DEFAULT_WORKER_TIMEOUT);
+        }
+
+        if ($pollFrequency > 0) {
+            $this->scope->setWorkerPoll($pollFrequency);
+        } else {
+            $this->scope->setWorkerPoll(self::DEFAULT_WORKER_POLL);
+        }
+
         $this->scope->run();
     }
 
