@@ -36,13 +36,12 @@ class RedisChannel implements Channel
 
     public function push(AsyncEvent $event)
     {
-        $this->redis->rpush($this->channelName, $this->serializer->serialize($event));
+        $this->redis->rpush($this->getPrefixedKey($this->getName()), $this->serializer->serialize($event));
     }
 
     public function pop(): ?AsyncEvent
     {
-        $serializedEvent = $this->redis->rpop($this->channelName);
-
+        $serializedEvent = $this->redis->rpop($this->getPrefixedKey($this->getName()));
         return $serializedEvent ? $this->serializer->deserialize($serializedEvent) : null;
     }
 
@@ -54,7 +53,8 @@ class RedisChannel implements Channel
 
     public function keepAlive()
     {
-        $this->redis->set($this->getKeepAliveKey(), 'true', 'EX', $this->keepAliveSeconds);
+        $key = $this->getKeepAliveKey();
+        $this->redis->set($key, 'true', 'EX', $this->keepAliveSeconds);
     }
 
     public function setKeepAliveSeconds(int $sec)
@@ -65,6 +65,11 @@ class RedisChannel implements Channel
     public function getName(): string
     {
         return $this->channelName;
+    }
+
+    public function getPrefixedKey(string $key): string
+    {
+        return config('database.redis.options.prefix', '') . $key;
     }
 
     public function getKeepAliveKey()
@@ -81,8 +86,8 @@ class RedisChannel implements Channel
 
     private function clearChannel()
     {
-        $this->redis->expire($this->getKeepAliveKey(), 0);
-        $this->redis->del($this->getName());
+        $this->redis->expire($this->getRedisKey($this->getKeepAliveKey()), 0);
+        $this->redis->del($this->getRedisKey($this->getName()));
     }
 
     public function __destruct()

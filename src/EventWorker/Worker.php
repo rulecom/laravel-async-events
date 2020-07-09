@@ -45,7 +45,7 @@ class Worker implements EventWorker
             try {
                 $eventsCount = $this->listener->run();
             } catch (\Throwable $e) {
-                throw new EventProcessingException("Failed to process job");
+                throw new EventProcessingException("Failed to process job", 0, $e);
 
             }
 

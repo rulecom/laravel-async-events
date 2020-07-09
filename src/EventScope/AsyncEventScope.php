@@ -2,9 +2,11 @@
 namespace Rule\AsyncEvents\EventScope;
 
 use Rule\AsyncEvents\Dispatcher\Dispatcher;
+use Rule\AsyncEvents\Dispatcher\LocalDispatcher;
 use Rule\AsyncEvents\EventScope\Exceptions\ScopeExecutionTimeout;
 use Rule\AsyncEvents\EventWorker\Worker;
 use Rule\AsyncEvents\Listener\Listener;
+use Rule\AsyncEvents\Listener\LocalListener;
 
 class AsyncEventScope implements EventScope
 {
@@ -21,7 +23,7 @@ class AsyncEventScope implements EventScope
     private $beforeCallback;
     private $afterCallback;
 
-    public function __construct(Dispatcher $dispatcher, Listener $listener, Worker $worker)
+    public function __construct(LocalDispatcher $dispatcher, LocalListener $listener, Worker $worker)
     {
         $this->dispatcher = $dispatcher;
         $this->listener = $listener;

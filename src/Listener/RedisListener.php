@@ -15,13 +15,11 @@ class RedisListener implements Listener, LocalListener
 
     private $channels;
     private $eventDispatcher;
-    private $redis;
 
     public function __construct(?Dispatcher $eventDispatcher)
     {
         $this->channels = [];
         $this->eventDispatcher = $eventDispatcher;
-        $this->redis = Redis::connection();
     }
 
     /**

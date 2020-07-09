@@ -69,13 +69,18 @@ class RedisEmitter implements Emitter
 
     private function findAliveListenerChannels($channelName)
     {
-        $prefixLength = strlen(RedisChannel::KEEP_ALIVE_KEY_PREFIX);
+        $prefixLength = strlen(config('database.redis.options.prefix', '') . RedisChannel::KEEP_ALIVE_KEY_PREFIX);
+        $redisKeepAliveKeysPattern = sprintf(
+            '%s:%s:*',
+            RedisChannel::KEEP_ALIVE_KEY_PREFIX,
+            $channelName
+        );
 
         return array_map(
             function (string $keepAliveKey) use ($prefixLength) {
                 return substr($keepAliveKey, $prefixLength + 1);
             },
-            $this->redis->keys(sprintf('%s:%s:*', RedisChannel::KEEP_ALIVE_KEY_PREFIX, $channelName))
+            $this->redis->keys($redisKeepAliveKeysPattern)
         );
     }
 }
